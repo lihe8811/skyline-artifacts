@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { useState } from 'react';
 import { Wallpaper, Telescope, FolderClosed } from 'lucide-react';
 
-export default function Default() {
+export default function DefaultNavLayout() {
   const [tab, setTab] = useState<string>('image');
 
   return (

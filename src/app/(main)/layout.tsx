@@ -19,10 +19,8 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ 
-  nav,
   children 
 }: Readonly <{ 
-  nav: React.ReactNode
   children: React.ReactNode 
 }>) {
   return (
@@ -30,10 +28,7 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <main>
-            {nav}
-            {children}
-          </main>
+          <main>{children}</main>
         </body>
       </html>
   )
