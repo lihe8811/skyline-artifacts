@@ -1,6 +1,6 @@
-import { Input, type FormProps, SelectWithImg } from "@lobehub/ui";
+import { Input, type FormProps, SelectWithImg } from '@lobehub/ui';
 import { Select } from 'antd';
-import { Palette } from 'lucide-react';
+import { Signature } from 'lucide-react';
 
 export const WordArtSetting = {
   wordartFont: 'dongfangdakai',
@@ -82,7 +82,7 @@ const WordArtTask: FormProps['items'] = [
       label: 'Style',
       name: 'wordartStyle',
     }],
-    icon: Palette,
+    icon: Signature,
     title: '艺术字',
   },
 ];

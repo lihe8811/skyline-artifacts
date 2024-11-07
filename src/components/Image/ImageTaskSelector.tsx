@@ -1,11 +1,11 @@
 'use client';
 
-import { Form } from "@lobehub/ui";
+import { Form, ItemGroup } from "@lobehub/ui";
 import { Button, ConfigProvider } from "antd";
 import React, { useState } from 'react';
 
-import { RepaintSetting, TextToImageSetting, WordArtSetting } from '@/types/Image';
-import { CreativeTask, RepaintTask, TextToImageTask, WordArtTask } from '@/types/Image';
+import { RepaintSetting, SketchSetting, TextToImageSetting, WordArtSetting } from '@/types/Image';
+import { CreativeTask, RepaintTask, SketchTask, TextToImageTask, WordArtTask } from '@/types/Image';
 
 const ImageTaskSelector: React.FC = () => {
   const [taskType, setTaskType] = useState<string>('text-to-image');
@@ -13,9 +13,11 @@ const ImageTaskSelector: React.FC = () => {
 
   const taskParams = taskType === 'repaint'
   ? RepaintTask
-  : taskType === 'wordart'
-    ? WordArtTask
-    : TextToImageTask;
+  : taskType === 'sketch'
+    ? SketchTask
+    : taskType === 'wordart'
+      ? WordArtTask
+      : TextToImageTask;
   
   const onValuesChange = ({ task }: { task: string }) => {
     if (task !== undefined) {
@@ -23,9 +25,11 @@ const ImageTaskSelector: React.FC = () => {
 
       const taskSetting = task === 'repaint'
       ? RepaintSetting
-      : task === 'wordart'
-        ? WordArtSetting
-        : TextToImageSetting;
+      : task === 'sketch'
+        ? SketchSetting
+        : task === 'wordart'
+          ? WordArtSetting
+          : TextToImageSetting;
 
       form.setFieldsValue(taskSetting);
     }
@@ -48,7 +52,10 @@ const ImageTaskSelector: React.FC = () => {
         initialValues={{...{task: taskType}, ...TextToImageSetting}}
         onValuesChange={onValuesChange}
         itemMinWidth={'max(30%, 240px)'}
-        items={[...(CreativeTask ?? []), ...(taskParams ?? [])]}
+        items={[
+          ...(CreativeTask ?? []).map(item => item as ItemGroup), 
+          ...(taskParams ?? []).map(item => item as ItemGroup),
+        ]}
         onFinish={console.table}
         variant={'default'}
       />

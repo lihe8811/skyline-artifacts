@@ -1,4 +1,4 @@
-import { Input, type FormProps } from "@lobehub/ui";
+import { Input, type FormProps } from '@lobehub/ui';
 import { Select } from 'antd';
 import { Dna } from 'lucide-react';
 
@@ -19,7 +19,7 @@ const TextToImageTask: FormProps['items'] = [
       ),
       desc: 'Type Prompt',
       label: 'Prompt',
-      name: 'regular-prompt',
+      name: 'regularPrompt',
     },
     {
       children: (
@@ -31,7 +31,7 @@ const TextToImageTask: FormProps['items'] = [
       ),
       desc: 'Type Negative Prompt',
       label: 'Negative Prompt',
-      name: 'regular-prompt',
+      name: 'regularNegativePrompt',
     },
     {
       children: (

@@ -7,3 +7,12 @@ main {
     height: 100%;
     width: 100%;
 }
+
+.canvas-modal {
+    display: flex;
+    justify-content: center;
+}
+
+.sketch-canvas {
+    overflow: hidden;
+}

@@ -1,4 +1,4 @@
-import { type FormProps } from "@lobehub/ui";
+import { type FormProps } from '@lobehub/ui';
 import { Brush } from 'lucide-react';
 import { UploadOutlined } from '@ant-design/icons';
 import { Button, message, Select, Upload, type UploadProps } from 'antd';
@@ -8,19 +8,19 @@ export const RepaintSetting = {
 }
 
 const props: UploadProps = {
-    name: 'file',
-    action: 'https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload',
-    onChange(info) {
-      if (info.file.status !== 'uploading') {
-        console.log(info.file, info.fileList);
-      }
-      if (info.file.status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === 'error') {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    },
-  };
+  name: 'file',
+  action: 'https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload',
+  onChange(info) {
+    if (info.file.status !== 'uploading') {
+      console.log(info.file, info.fileList);
+    }
+    if (info.file.status === 'done') {
+      message.success(`${info.file.name} file uploaded successfully`);
+    } else if (info.file.status === 'error') {
+      message.error(`${info.file.name} file upload failed.`);
+    }
+  },
+}
 
 
 const RepaintTask: FormProps['items'] = [
@@ -28,7 +28,7 @@ const RepaintTask: FormProps['items'] = [
     children: [{
       children: (
         <Upload {...props}>
-          <Button type="primary" icon={<UploadOutlined />}>
+          <Button type='primary' icon={<UploadOutlined />}>
             Upload
           </Button>
         </Upload>

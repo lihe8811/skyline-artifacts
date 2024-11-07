@@ -1,4 +1,4 @@
-import { type FormProps } from "@lobehub/ui";
+import { type FormProps } from '@lobehub/ui';
 import { Select } from 'antd';
 import { Palette } from 'lucide-react';
 
