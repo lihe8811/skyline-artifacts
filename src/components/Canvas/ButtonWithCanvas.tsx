@@ -3,11 +3,11 @@ import { Button } from 'antd';
 import { HighlightOutlined } from '@ant-design/icons';
 import { useState, useRef } from "react";
 
-import { ReactSketchCanvas } from "react-sketch-canvas";
+import { ReactSketchCanvas, ReactSketchCanvasRef } from "react-sketch-canvas";
 
 const ButtonWithCanvas = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const canvasRef = useRef(null);
+  const canvasRef = useRef<ReactSketchCanvasRef | null>(null);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -18,15 +18,37 @@ const ButtonWithCanvas = () => {
   };
 
   const clearCanvas = () => {
-    canvasRef?.current.clearCanvas();
+    canvasRef.current?.clearCanvas();
   }
 
-  const submitCanvas = () => {
+  const submitCanvas = async () => {
+    canvasRef.current?.exportImage('png')
+      .then((imageData) => {
+        return fetch('/api/sketch', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ imageData }),
+        });
+      })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Network error.');
+        }
+      })
+      .then(({ imageUrl }) => {
+        console.log(imageUrl);
+      })
+      .catch((error) => {
+        console.error('Error exporting image:', error);
+      });
+
     setIsModalOpen(false);
   }
 
   const canvasStyle = {
-    border: "0.0625rem solid #9c9c9c"
+    border: "0.0625rem solid rgba(156, 156, 156, 0.5)"
   };
 
   return (
@@ -42,10 +64,9 @@ const ButtonWithCanvas = () => {
         className={'canvas-modal'}
         footer={<>
           <Button onClick={clearCanvas}>Clear</Button>
-          <Button type={'primary'}>Submit</Button>
+          <Button type={'primary'} onClick={submitCanvas}>Submit</Button>
         </>}
         onCancel={cancelModal}
-        onOk={submitCanvas}
         open={isModalOpen}
         title={'Create Sketch'}
       >
@@ -56,7 +77,7 @@ const ButtonWithCanvas = () => {
           ref={canvasRef}
           style={canvasStyle}
           strokeWidth={6} 
-          strokeColor={'#f04f88'} 
+          strokeColor={'#000'} 
         />
       </Modal>
     </>
