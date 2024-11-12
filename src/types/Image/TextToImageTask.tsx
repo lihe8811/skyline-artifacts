@@ -4,7 +4,6 @@ import { Dna } from 'lucide-react';
 
 export const TextToImageSetting = {
   regularStyle: '<photography>',
-  regularSize: '1024*1024',
 }
 
 const TextToImageTask: FormProps['items'] = [
@@ -53,21 +52,6 @@ const TextToImageTask: FormProps['items'] = [
       desc: 'Pick Style',
       label: 'Style',
       name: 'regularStyle',
-    },
-    {
-      children: (
-        <Select
-          defaultValue={TextToImageSetting.regularSize}
-          options={[
-            { label: '1024 x 1024', value: '1024*1024' },
-            { label: '720 x 1280', value: '720*1280' },
-            { label: '1280 x 720', value: '1280*720' },
-          ]}
-        />
-      ),
-      desc: 'Pick Image Size',
-      label: 'Size',
-      name: 'regularSize',
     }],
     icon: Dna,
     title: '文字作画',

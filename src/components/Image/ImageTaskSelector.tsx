@@ -6,8 +6,8 @@ import React, { useState, useEffect } from 'react';
 
 import useGlobalState from '@/lib/store';
 import GetDomainName from '@/util/GetDomainName';
-import { RepaintSetting, SketchSetting, TextToImageSetting, WordArtSetting } from '@/types/Image';
-import { CreativeTask, RepaintTask, SketchTask, TextToImageTask, WordArtTask } from '@/types/Image';
+import { SketchSetting, TextToImageSetting, WordArtSetting } from '@/types/Image';
+import { CreativeTask, SketchTask, TextToImageTask, WordArtTask } from '@/types/Image';
 
 const ImageTaskSelector: React.FC = () => {
   const { imageUrl, updateDisplayUrl } = useGlobalState();
@@ -15,53 +15,56 @@ const ImageTaskSelector: React.FC = () => {
   const [visible, setVisible] = useState<boolean>(false);
   const [taskId, setTaskId] = useState<string>('');
   const [status, setStatus] = useState<string>('PENDING');
+  const [intervalId, setIntervalId] = useState<Timer>();
   const [form] = Form.useForm();
 
   useEffect(() => {
-    const fetchTaskStatus = async (taskId: string) => {
-      let retries = 0;
-      while (status !== 'SUCCEEDED' && retries < 10) {
-        try {
-          let response = await fetch(`/api/gen-image/${taskId}`, {
-            cache: 'no-store',
-            headers: {
-              'Pragma': 'no-cache',
-              'Cache-Control': 'no-cache'
-            },
-            next: { revalidate: 0 }
-          });
-          
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          let data = await response.json();
-          setStatus(data.task_status);
-
-          if (data.task_status === 'SUCCEEDED') {
-            console.log(data.url);
-            updateDisplayUrl(data.url);
-            return;
-          }
-        } catch (error) {
-          console.error(error);
+    const fetchTaskStatus = async () => {
+      try {
+        const response = await fetch(`/api/gen-image/${taskId}`, {
+          cache: 'no-store',
+          headers: {
+            'Pragma': 'no-cache',
+            'Cache-Control': 'no-cache'
+          },
+          next: { revalidate: 0 }
+        });
+        
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
         }
+        const data = await response.json();
+        setStatus(data.task_status);
 
-        retries++;
-        await new Promise(resolve => setTimeout(resolve, 5000));
+        if (data.task_status === 'SUCCEEDED') {
+          console.log(data.url);
+          updateDisplayUrl(data.url);
+          return;
+        }
+      } catch (error) {
+        console.log(status);
+        console.error(error);
       }
     };
     
-    if (taskId)
-      fetchTaskStatus(taskId);
+    if (taskId && taskId !== '') {
+      const id = setInterval(fetchTaskStatus, 7500);
+      setIntervalId(id);
+      fetchTaskStatus();
+    }
+
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
   }, [taskId]);
 
   const hideAlert = () => {
     setVisible(false);
   }
 
-  const taskParams = taskType === 'repaint'
-  ? RepaintTask
-  : taskType === 'sketch'
+  const taskParams = taskType === 'sketch'
     ? SketchTask
     : taskType === 'wordart'
       ? WordArtTask
@@ -70,10 +73,9 @@ const ImageTaskSelector: React.FC = () => {
   const onValuesChange = ({ task }: { task: string }) => {
     if (task !== undefined) {
       setTaskType(task);
+      updateDisplayUrl('/palceholder-square.png');
 
-      const taskSetting = task === 'repaint'
-      ? RepaintSetting
-      : task === 'sketch'
+      const taskSetting = task === 'sketch'
         ? SketchSetting
         : task === 'wordart'
           ? WordArtSetting
@@ -93,24 +95,27 @@ const ImageTaskSelector: React.FC = () => {
     const values = await form.validateFields();
     if (Object.values(values).some(value => value === undefined)) {
       setVisible(true);
+    } else {
+      setTaskId('');
+      updateDisplayUrl('/placeholder-loading.gif');
+      console.table(values);
+      
+      fetch('/api/gen-image', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(values)
+      }).then(response => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        return response.json();
+      }).then(data => {
+        console.log(data.task_id);
+        setTaskId(data.task_id);
+      }).catch(error => {
+        console.error(error);
+      });
     }
-    console.table(values);
-    
-    fetch('/api/gen-image', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(values)
-    }).then(response => {
-      if (!response.ok) {
-        throw new Error(response.statusText);
-      }
-      return response.json();
-    }).then(data => {
-      console.log(data.task_id);
-      setTaskId(data.task_id);
-    }).catch(error => {
-      console.error(error);
-    });
   }
 
   return (

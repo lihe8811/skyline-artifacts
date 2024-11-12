@@ -1,12 +1,9 @@
 'use client';
 
-import { ActionIcon, ChatHeader, Image } from '@lobehub/ui';
+import { ChatHeader } from '@lobehub/ui';
 import { LobeHub } from '@lobehub/icons';
 import Link from 'next/link';
 import { Flexbox } from 'react-layout-kit';
-import { ImageDown } from 'lucide-react';
-
-const url = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQA5TFr2P4Shfl2xEc1R-nbZw_9DosQThOJYw&s';
 
 export default function ImageLayout({
   nav,
@@ -52,20 +49,6 @@ export default function ImageLayout({
             style={{ overflow: 'hidden', position: 'relative' }}
           >
             {children}
-            <Flexbox 
-              flex={1} 
-              padding={12}
-              style={{ overflow: 'hidden', position: 'relative' }}
-            >
-              <Image
-                alt={''}
-                size={720}
-                src={url}
-                preview={{
-                  toolbarAddon: <ActionIcon color={'#fff'} icon={ImageDown} />,
-                }}
-              />
-            </Flexbox>
           </Flexbox>
         </Flexbox>
       </Flexbox>

@@ -14,21 +14,12 @@ export async function POST(req: NextRequest) {
   const submitJobUrlMap = new Map([
     ['text-to-image', '/text2image/image-synthesis'],
     ['sketch', '/image2image/image-synthesis/'],
-    ['repaint', '/image-generation/generation'],
     ['wordart', '/wordart/texture'],
   ]);
 
   const processSubmission = (data: SubmissionData) => {
     const url = `${baseUrl}${submitJobUrlMap.get(data.task)}`
-    const body = data.task === 'repaint'
-    ? {
-        'model': 'wanx-style-repaint-v1',
-        'input': {
-          'image_url': data.repaintImage,
-          'style_index': data.repaintStyle,
-        },
-      }
-    : data.task === 'sketch'
+    const body = data.task === 'sketch'
       ? {
           'model': 'wanx-sketch-to-image-lite',
           'input': {
@@ -66,7 +57,7 @@ export async function POST(req: NextRequest) {
             },
             'parameters': {
               'style': data.regularStyle,
-              'size': data.regularSize,
+              'size': '1024*1024',
               'n': 1,
               'negative_prompt': data.regularNegativePrompt
             }
@@ -75,6 +66,8 @@ export async function POST(req: NextRequest) {
   };
 
   const { url, body } = processSubmission(data);
+  console.log(url);
+  console.log(body);
   try {
     const response = await fetch(url, {
       method: 'POST',

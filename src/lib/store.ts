@@ -10,7 +10,7 @@ interface GlobalState {
 const useGlobalState = create<GlobalState>((set) => ({
     imageUrl: '',
     updateImageUrl: (imageUrl: string) => set({ imageUrl: imageUrl }),
-    displayUrl: '',
+    displayUrl: '/placeholder-square.png',
     updateDisplayUrl: (displayUrl: string) => set({ displayUrl: displayUrl }),
 }));
 
