@@ -8,6 +8,10 @@ main {
     width: 100%;
 }
 
+.alert-banner {
+    top: 10px;
+}
+
 .canvas-modal {
     display: flex;
     justify-content: center;

@@ -32,3 +32,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Failed to save image' }, { status: 500 });
   } 
 };
+
+export async function DELETE(req: NextRequest) {
+  const { imageUrl } = await req.json();
+  if (!imageUrl) {
+    return NextResponse.json({ error: 'Image URL is required' }, { status: 400 });
+  }
+
+  const filePath = path.join(process.cwd(), 'public', imageUrl);
+  fs.unlink(filePath, (error) => {
+    console.error('Error deleting file:', error);
+    return NextResponse.json({ error: 'Error deleting file:' }, { status: 500 });
+  });
+};

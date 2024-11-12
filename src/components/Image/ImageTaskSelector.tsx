@@ -1,15 +1,30 @@
 'use client';
 
 import { Form, ItemGroup } from "@lobehub/ui";
-import { Button, ConfigProvider } from "antd";
-import React, { useState } from 'react';
+import { Alert, Button, ConfigProvider } from "antd";
+import React, { useState, useEffect } from 'react';
 
+import useGlobalState from '@/lib/store';
+import GetDomainName from '@/util/GetDomainName';
 import { RepaintSetting, SketchSetting, TextToImageSetting, WordArtSetting } from '@/types/Image';
 import { CreativeTask, RepaintTask, SketchTask, TextToImageTask, WordArtTask } from '@/types/Image';
 
 const ImageTaskSelector: React.FC = () => {
+  const { imageUrl } = useGlobalState();
   const [taskType, setTaskType] = useState<string>('text-to-image');
+  const [visible, setVisible] = useState<boolean>(false);
   const [form] = Form.useForm();
+
+  useEffect(() => {
+    if (visible) {
+      const timer = setTimeout(() => { setVisible(false) }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [visible]);
+
+  const hideAlert = () => {
+    setVisible(false);
+  }
 
   const taskParams = taskType === 'repaint'
   ? RepaintTask
@@ -18,7 +33,7 @@ const ImageTaskSelector: React.FC = () => {
     : taskType === 'wordart'
       ? WordArtTask
       : TextToImageTask;
-  
+
   const onValuesChange = ({ task }: { task: string }) => {
     if (task !== undefined) {
       setTaskType(task);
@@ -33,6 +48,35 @@ const ImageTaskSelector: React.FC = () => {
 
       form.setFieldsValue(taskSetting);
     }
+  }
+
+  const onFinish = async () => {
+    if (taskType === 'sketch') {
+      form.setFieldsValue({
+        sketchImage: `http://${GetDomainName()}${imageUrl}`
+      });
+    }
+    
+    const values = await form.validateFields();
+    if (Object.values(values).some(value => value === undefined)) {
+      setVisible(true);
+    }
+    console.table(values);
+    
+    fetch('/api/gen-image', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(values)
+    }).then(response => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      return response.json();
+    }).then(data => {
+      console.log(data);
+    }).catch(error => {
+      console.error(error);
+    });
   }
 
   return (
@@ -56,9 +100,20 @@ const ImageTaskSelector: React.FC = () => {
           ...(CreativeTask ?? []).map(item => item as ItemGroup), 
           ...(taskParams ?? []).map(item => item as ItemGroup),
         ]}
-        onFinish={console.table}
+        onFinish={onFinish}
         variant={'default'}
       />
+      <>
+        { visible && (<Alert
+          className={'alert-banner'}
+          closable
+          afterClose={hideAlert}
+          description={'Empty input is not allowed'}
+          message={'Input Error'}
+          showIcon={true}
+          type={'error'}
+        />)}
+      </>
     </ConfigProvider>
   );
 };

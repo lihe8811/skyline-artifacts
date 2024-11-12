@@ -2,10 +2,12 @@ import { Modal } from '@lobehub/ui';
 import { Button } from 'antd';
 import { HighlightOutlined } from '@ant-design/icons';
 import { useState, useRef } from "react";
+import useGlobalState from '@/lib/store';
 
 import { ReactSketchCanvas, ReactSketchCanvasRef } from "react-sketch-canvas";
 
 const ButtonWithCanvas = () => {
+  const { updateImageUrl } = useGlobalState();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const canvasRef = useRef<ReactSketchCanvasRef | null>(null);
 
@@ -38,7 +40,7 @@ const ButtonWithCanvas = () => {
         }
       })
       .then(({ imageUrl }) => {
-        console.log(imageUrl);
+        updateImageUrl(imageUrl);
       })
       .catch((error) => {
         console.error('Error exporting image:', error);
@@ -64,7 +66,7 @@ const ButtonWithCanvas = () => {
         className={'canvas-modal'}
         footer={<>
           <Button onClick={clearCanvas}>Clear</Button>
-          <Button type={'primary'} onClick={submitCanvas}>Submit</Button>
+          <Button type={'primary'} onClick={submitCanvas}>Save</Button>
         </>}
         onCancel={cancelModal}
         open={isModalOpen}

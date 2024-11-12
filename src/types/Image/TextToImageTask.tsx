@@ -4,7 +4,7 @@ import { Dna } from 'lucide-react';
 
 export const TextToImageSetting = {
   regularStyle: '<photography>',
-  regularSize: '1024 x 1024',
+  regularSize: '1024*1024',
 }
 
 const TextToImageTask: FormProps['items'] = [
