@@ -10,17 +10,50 @@ import { RepaintSetting, SketchSetting, TextToImageSetting, WordArtSetting } fro
 import { CreativeTask, RepaintTask, SketchTask, TextToImageTask, WordArtTask } from '@/types/Image';
 
 const ImageTaskSelector: React.FC = () => {
-  const { imageUrl } = useGlobalState();
+  const { imageUrl, updateDisplayUrl } = useGlobalState();
   const [taskType, setTaskType] = useState<string>('text-to-image');
   const [visible, setVisible] = useState<boolean>(false);
+  const [taskId, setTaskId] = useState<string>('');
+  const [status, setStatus] = useState<string>('PENDING');
   const [form] = Form.useForm();
 
   useEffect(() => {
-    if (visible) {
-      const timer = setTimeout(() => { setVisible(false) }, 5000);
-      return () => clearTimeout(timer);
-    }
-  }, [visible]);
+    const fetchTaskStatus = async (taskId: string) => {
+      let retries = 0;
+      while (status !== 'SUCCEEDED' && retries < 10) {
+        try {
+          let response = await fetch(`/api/gen-image/${taskId}`, {
+            cache: 'no-store',
+            headers: {
+              'Pragma': 'no-cache',
+              'Cache-Control': 'no-cache'
+            },
+            next: { revalidate: 0 }
+          });
+          
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          let data = await response.json();
+          setStatus(data.task_status);
+
+          if (data.task_status === 'SUCCEEDED') {
+            console.log(data.url);
+            updateDisplayUrl(data.url);
+            return;
+          }
+        } catch (error) {
+          console.error(error);
+        }
+
+        retries++;
+        await new Promise(resolve => setTimeout(resolve, 5000));
+      }
+    };
+    
+    if (taskId)
+      fetchTaskStatus(taskId);
+  }, [taskId]);
 
   const hideAlert = () => {
     setVisible(false);
@@ -73,7 +106,8 @@ const ImageTaskSelector: React.FC = () => {
       }
       return response.json();
     }).then(data => {
-      console.log(data);
+      console.log(data.task_id);
+      setTaskId(data.task_id);
     }).catch(error => {
       console.error(error);
     });
@@ -88,7 +122,6 @@ const ImageTaskSelector: React.FC = () => {
       <Form
         footer={
           <>
-            <Button htmlType="button">Reset</Button>
             <Button htmlType="submit" type="primary">Create</Button>
           </>
         }
