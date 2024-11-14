@@ -2,12 +2,12 @@ import { Modal } from '@lobehub/ui';
 import { Button } from 'antd';
 import { HighlightOutlined } from '@ant-design/icons';
 import { useState, useRef } from "react";
-import useGlobalState from '@/lib/store';
+import useImageStore from '@/lib/store';
 
 import { ReactSketchCanvas, ReactSketchCanvasRef } from "react-sketch-canvas";
 
 const ButtonWithCanvas = () => {
-  const { updateImageUrl } = useGlobalState();
+  const { updateImageUrl } = useImageStore();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const canvasRef = useRef<ReactSketchCanvasRef | null>(null);
 

@@ -4,11 +4,11 @@ import { ActionIcon, Image } from '@lobehub/ui';
 import { ImageDown } from 'lucide-react';
 import { Flexbox } from 'react-layout-kit';
 
-import useGlobalState from '@/lib/store';
+import useImageStore from '@/lib/store';
 import ImageTaskSelector from '@/components/Image/ImageTaskSelector';
 
 const ImageTaskForm: React.FC = () => {
-  const { displayUrl } = useGlobalState();
+  const { displayUrl } = useImageStore();
   
   return (
     <>
@@ -28,7 +28,7 @@ const ImageTaskForm: React.FC = () => {
           alt={''}
           size={720}
           src={displayUrl}
-          placeholder={<Image preview={false} src='placeholder-square.png' />}
+          placeholder={<Image alt={''} preview={false} src='placeholder-square.png' />}
           preview={{
             toolbarAddon: <ActionIcon color={'#fff'} icon={ImageDown} />,
           }}

@@ -4,13 +4,13 @@ import { Form, ItemGroup } from "@lobehub/ui";
 import { Alert, Button, ConfigProvider } from "antd";
 import React, { useState, useEffect } from 'react';
 
-import useGlobalState from '@/lib/store';
+import useImageStore from '@/lib/store';
 import GetDomainName from '@/util/GetDomainName';
 import { SketchSetting, TextToImageSetting, WordArtSetting } from '@/types/Image';
 import { CreativeTask, SketchTask, TextToImageTask, WordArtTask } from '@/types/Image';
 
 const ImageTaskSelector: React.FC = () => {
-  const { imageUrl, updateDisplayUrl } = useGlobalState();
+  const { imageUrl, updateDisplayUrl } = useImageStore();
   const [taskType, setTaskType] = useState<string>('text-to-image');
   const [visible, setVisible] = useState<boolean>(false);
   const [taskId, setTaskId] = useState<string>('');
