@@ -47,7 +47,7 @@ const ImageTaskSelector: React.FC = () => {
       }
     };
     
-    if (taskId && taskId !== '') {
+    if (taskId && taskId !== '' && status !== 'SUCCEEDED') {
       const id = setInterval(fetchTaskStatus, 7500);
       setIntervalId(id);
       fetchTaskStatus();
