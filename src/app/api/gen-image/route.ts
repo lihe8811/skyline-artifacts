@@ -82,6 +82,7 @@ export async function POST(req: NextRequest) {
       throw new Error(response.statusText);
     }
     const data = await response.json();
+    console.log(data);
     return NextResponse.json({ task_id: data.output.task_id });
   } catch (error) {
     return NextResponse.json({ error: error });
