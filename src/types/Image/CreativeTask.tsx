@@ -10,7 +10,6 @@ const CreativeTask: FormProps['items'] = [
           options={[
             { label: '文字作画', value: 'text-to-image'},
             { label: '涂鸦作画', value: 'sketch' },
-            { label: '人像重绘', value: 'repaint' },
             { label: '艺术字', value: 'wordart' },
           ]}
         />
