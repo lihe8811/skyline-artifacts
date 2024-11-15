@@ -73,7 +73,8 @@ const ImageTaskSelector: React.FC = () => {
   const onValuesChange = ({ task }: { task: string }) => {
     if (task !== undefined) {
       setTaskType(task);
-      updateDisplayUrl('/palceholder-square.png');
+      updateDisplayUrl('/placeholder-square.png');
+      console.log(GetDomainName());
 
       const taskSetting = task === 'sketch'
         ? SketchSetting
