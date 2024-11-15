@@ -40,7 +40,8 @@ const ButtonWithCanvas = () => {
         }
       })
       .then(({ imageUrl }) => {
-        updateImageUrl(imageUrl);
+        const baseUrl = "https://image-1316917051.cos.ap-tokyo.myqcloud.com"
+        updateImageUrl(`${baseUrl}${imageUrl}`);
       })
       .catch((error) => {
         console.error('Error exporting image:', error);

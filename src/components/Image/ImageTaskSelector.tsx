@@ -87,7 +87,7 @@ const ImageTaskSelector: React.FC = () => {
   const onFinish = async () => {
     if (taskType === 'sketch') {
       form.setFieldsValue({
-        sketchImage: `http://image.skyline-ai.space${imageUrl}`
+        sketchImage: imageUrl
       });
     }
     

@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
     }
     const imageBuffer = Buffer.from(base64Image, 'base64');
 
-    const outputDirPath = path.join(process.cwd(), 'public', 'tmp')
+    const outputDirPath = '/lhcos-data';
     if (!fs.existsSync(outputDirPath)) {
       fs.mkdirSync(outputDirPath, { recursive: true });
     }
@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
     const outputFilePath = path.join(outputDirPath, fileName);
     fs.writeFileSync(outputFilePath, imageBuffer);
 
-    const imageUrl = `/tmp/${fileName}`;
+    const imageUrl = `${outputFilePath}`;
     return NextResponse.json({ imageUrl });
   } catch (error) {
     console.error(error);
