@@ -73,7 +73,6 @@ const ImageTaskSelector: React.FC = () => {
     if (task !== undefined) {
       setTaskType(task);
       updateDisplayUrl('/placeholder-square.png');
-      console.log(`http://${process.env.DOMAIN_NAME}${imageUrl}`);
 
       const taskSetting = task === 'sketch'
         ? SketchSetting
@@ -88,7 +87,7 @@ const ImageTaskSelector: React.FC = () => {
   const onFinish = async () => {
     if (taskType === 'sketch') {
       form.setFieldsValue({
-        sketchImage: `http://${process.env.DOMAIN_NAME}${imageUrl}`
+        sketchImage: `http://image.skyline-ai.space${imageUrl}`
       });
     }
     
