@@ -96,6 +96,7 @@ const ImageTaskSelector: React.FC = () => {
       setVisible(true);
     } else {
       setTaskId('');
+      setStatus('PENDING');
       updateDisplayUrl('/placeholder-loading.gif');
       console.table(values);
       
@@ -117,6 +118,12 @@ const ImageTaskSelector: React.FC = () => {
     }
   }
 
+  const reset = () => {
+    setTaskId('');
+    setStatus('PENDING');
+    console.log('Successfully reset');
+  }
+
   return (
     <ConfigProvider
       theme={{
@@ -126,7 +133,7 @@ const ImageTaskSelector: React.FC = () => {
       <Form
         footer={
           <>
-            <Button htmlType="submit" type="primary">Create</Button>
+            <Button htmlType="submit" onClick={reset} type="primary">Create</Button>
           </>
         }
         form={form}
