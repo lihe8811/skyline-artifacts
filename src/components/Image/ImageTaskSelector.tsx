@@ -5,7 +5,6 @@ import { Alert, Button, ConfigProvider } from "antd";
 import React, { useState, useEffect } from 'react';
 
 import useImageStore from '@/lib/store';
-import GetDomainName from '@/util/GetDomainName';
 import { SketchSetting, TextToImageSetting, WordArtSetting } from '@/types/Image';
 import { CreativeTask, SketchTask, TextToImageTask, WordArtTask } from '@/types/Image';
 
@@ -74,7 +73,7 @@ const ImageTaskSelector: React.FC = () => {
     if (task !== undefined) {
       setTaskType(task);
       updateDisplayUrl('/placeholder-square.png');
-      console.log(GetDomainName());
+      console.log(`http://${process.env.DOMAIN_NAME}${imageUrl}`);
 
       const taskSetting = task === 'sketch'
         ? SketchSetting
@@ -89,7 +88,7 @@ const ImageTaskSelector: React.FC = () => {
   const onFinish = async () => {
     if (taskType === 'sketch') {
       form.setFieldsValue({
-        sketchImage: `http://${GetDomainName()}${imageUrl}`
+        sketchImage: `http://${process.env.DOMAIN_NAME}${imageUrl}`
       });
     }
     
